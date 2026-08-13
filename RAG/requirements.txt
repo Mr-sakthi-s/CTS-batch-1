@@ -1,0 +1,9 @@
+chromadb
+sentence-transformers
+torch
+transformers
+google-generativeai
+pymupdf
+python-docx
+langchain-text-splitters
+numpy
