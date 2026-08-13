@@ -1,0 +1,103 @@
+# ==========================================
+# Environments & Secrets
+# ==========================================
+.env
+.env.*
+!.env.example
+!.env.template
+*.env
+api_keys.json
+
+# ==========================================
+# Python & Virtual Environments
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ==========================================
+# RAG, Data & Vector Databases
+# ==========================================
+vector_db/
+**/vector_db/
+chroma/
+chroma_db/
+*.chromadb
+*.sqlite3
+faiss_index/
+data/
+data1/
+datasets/
+models/
+*.bin
+*.pt
+*.pth
+*.onnx
+*.h5
+*.safetensors
+.cache/
+huggingface/
+
+# ==========================================
+# IDEs & Code Editors
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+.gemini/
+
+# ==========================================
+# Testing & Code Quality
+# ==========================================
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ==========================================
+# Logs & Temporary Files
+# ==========================================
+*.log
+logs/
+temp/
+tmp/
+
+# ==========================================
+# Operating System Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
