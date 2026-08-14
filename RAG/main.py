@@ -6,124 +6,182 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 load_dotenv()
 
-# =========================
-# Embedding Model
-# =========================
+# ==================================================
+# EMBEDDING MODEL
+# ==================================================
 
 embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
+    model_name=r"C:\Users\sakthi murugan\.cache\huggingface\hub\models--sentence-transformers--all-MiniLM-L6-v2\snapshots\1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
 )
 
-# =========================
-# Vector DB
-# =========================
+# ==================================================
+# KNOWLEDGE COLLECTION
+# ==================================================
 
-db = Chroma(
+knowledge_db = Chroma(
+    collection_name="telecom_knowledge",
     persist_directory="vector_db",
     embedding_function=embeddings
 )
 
-retriever = db.as_retriever(
+knowledge_retriever = knowledge_db.as_retriever(
     search_kwargs={"k": 3}
 )
 
-# =========================
+# ==================================================
+# PATTERN COLLECTION
+# ==================================================
+
+pattern_db = Chroma(
+    collection_name="telecom_patterns",
+    persist_directory="vector_db",
+    embedding_function=embeddings
+)
+
+pattern_retriever = pattern_db.as_retriever(
+    search_kwargs={"k": 5}
+)
+
+# ==================================================
 # LLM
-# =========================
+# ==================================================
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-3.5-flash"
 )
 
-# =========================
-# RAG FUNCTION
-# =========================
+# ==================================================
+# RCA GENERATION
+# ==================================================
 
 def generate_rca(ml_output):
 
     query = f"""
-    Predicted Fault Severity:
-    {ml_output['predicted_fault_severity']}
+Predicted Fault Severity: {ml_output['predicted_fault_severity']}
 
-    Severity Type:
-    {ml_output['severity_type']}
+Severity Type: {ml_output['severity_type']}
 
-    Resource Type:
-    {ml_output['resource_type']}
+Resource Type: {ml_output['resource_type']}
 
-    Event Types:
-    {', '.join(ml_output['event_types'])}
+Event Types:
+{', '.join(ml_output['event_types'])}
 
-    Log Features:
-    {', '.join(ml_output['log_features'])}
+Log Features:
+{', '.join(ml_output['log_features'])}
 
-    Volume:
-    {ml_output['volume']}
-    """
+Volume:
+{ml_output['volume']}
+"""
 
-    docs = retriever.invoke(query)
+    # ==========================================
+    # KNOWLEDGE RETRIEVAL
+    # ==========================================
 
-    context = "\n\n".join(
-        [doc.page_content for doc in docs]
+    knowledge_docs = knowledge_retriever.invoke(query)
+
+    knowledge_context = "\n\n".join(
+        doc.page_content
+        for doc in knowledge_docs
     )
 
+    # ==========================================
+    # PATTERN RETRIEVAL
+    # ==========================================
+
+    pattern_docs = pattern_retriever.invoke(query)
+
+    pattern_context = "\n\n".join(
+        doc.page_content
+        for doc in pattern_docs
+    )
+
+    # ==========================================
+    # PROMPT
+    # ==========================================
+
+    
     prompt = f"""
-    You are an expert Telecom Root Cause Analysis Agent.
+You are an Expert Telecom Root Cause Analysis Agent.
 
-    NETWORK INCIDENT:
+NETWORK INCIDENT
+================
 
-    {query}
+{query}
 
-    KNOWLEDGE BASE:
+==================================================
+TELECOM KNOWLEDGE BASE
+==================================================
 
-    {context}
+{knowledge_context}
 
-    Generate:
+==================================================
+SIMILAR HISTORICAL INCIDENTS
+==================================================
 
-    1. Probable Root Cause
-    2. Confidence Score
-    3. Explanation
-    4. Immediate Actions
-    5. Preventive Actions
-    6. Maintenance Recommendations
-    7. Risk Level
-    """
+{pattern_context}
+
+==================================================
+TASK
+==================================================
+
+Use BOTH:
+
+1. Telecom domain knowledge.
+2. Similar historical incidents.
+
+Generate a professional RCA report containing:
+
+1. Probable Root Cause
+2. Confidence Score (%)
+3. Technical Explanation
+4. Similar Historical Incident Analysis
+5. Immediate Actions
+6. Preventive Actions
+7. Maintenance Recommendations
+8. Risk Level
+
+Rules:
+
+- Base conclusions on retrieved evidence.
+- Mention which historical patterns support the diagnosis.
+- If historical incidents conflict with knowledge base,
+  prefer knowledge base information.
+- Keep recommendations practical and technical.
+"""
 
     response = llm.invoke(prompt)
 
-    answer = ""
-
     if isinstance(response.content, list):
+
+        answer = ""
 
         for block in response.content:
 
             if isinstance(block, dict):
                 answer += block.get("text", "")
 
-    else:
-        answer = response.content
+        return answer
 
-    return answer
+    return response.content
 
 
-# ==========================================
-# TEMPORARY TEST DATA
-# REMOVE AFTER ML IS READY
-# ==========================================
+# ==================================================
+# TEST
+# ==================================================
 
 if __name__ == "__main__":
 
     ml_output = {
         "predicted_fault_severity": 2,
-        "severity_type": "severity_type 5",
-        "resource_type": "resource_type 8",
+        "severity_type": "severity_type 2",
+        "resource_type": "resource_type 5",
         "event_types": [
-            "event_type 11",
+            "event_type 10",
             "event_type 12",
             "event_type 14"
         ],
         "log_features": [
-            "feature 68",
+            "feature 64",
             "feature 82",
             "feature 91"
         ],
@@ -131,4 +189,10 @@ if __name__ == "__main__":
     }
 
     result = generate_rca(ml_output)
+
+    print("\n")
+    print("=" * 100)
+    print("ROOT CAUSE ANALYSIS REPORT")
+    print("=" * 100)
+
     print(result)
