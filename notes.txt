@@ -1,0 +1,8 @@
+Knowledge says:
+Radio Equipment Failure
+
+Patterns say:
+Cooling Failure
+
+RCA Agent reasons:
+Cooling failure likely damaged radio equipment.
