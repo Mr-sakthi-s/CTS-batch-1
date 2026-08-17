@@ -106,3 +106,4 @@ models
 sample.py
 download_model.py
 
+/frontend/node_modules

@@ -1,5 +1,0 @@
-raw_incident_signature,semantic_incident_signature,root_cause,successful_resolution
-Severity Type: severity_type 1 | Resource Type: resource_type 8 | Event Types: event_type 32 | Log Features: log_feature 234,Severity: Informational Alert | Resource: Radio Access Equipment | Events: Device Failure Alert | Feature Groups: Optical Indicators,"Resource type Aggregation Switch Group, severity type Informational Alert (Low-risk operational notification, no immediate customer impact) configurations typically show 6 events and 134 total log volume when healthy (fault_severity 0). When unique_log_features (13) and mean_log_volume (10.31) rise, this pattern has historically been associated with aggregation-layer traffic bottlenecks from oversubscription. Early warning indicator: total_log_volume exceeding 134 on Aggregation Switch Group. Recommended action: Review aggregation switch capacity planning and rebalance traffic.
-
-Historical Solution:
-Review aggregation switch capacity planning and rebalance traffic load",
