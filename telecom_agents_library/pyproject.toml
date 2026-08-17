@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "telecom-agents"
+version = "0.1.1"
+description = "Reusable telecom fault RCA, dispatch, feedback, escalation, and memory agents."
+readme = "README.md"
+requires-python = ">=3.10"
+
+license = {text = "MIT"}
+
+authors = [
+    {name = "Tamizhvendhan S", email = "stamizhv@gmail.com"},
+    {name = "Aadhi", email = "aadhisesh01@gmail.com"},
+    {name = "Olivia Mercy Francina J", email = "jomfolives651@gmail.com"},
+    {name = "Fathima Azeela S", email = "fathimaazeela55@gmail.com"},
+    {name = "Sakthimurugan S", email = "sakthimurugan050806@gmail.com"},
+    {name = "Yuvashree S", email = "yuvashree310305@gmail.com"},
+    {name = "Ganesh B", email = "ganeshbalaji765@gmail.com"}
+]
+
+maintainers = [
+    {name = "Tamizhvendhan S", email = "stamizhv@gmail.com"},
+    {name = "Aadhi", email = "aadhisesh01@gmail.com"},
+    {name = "Olivia Mercy Francina J", email = "jomfolives651@gmail.com"},
+    {name = "Fathima Azeela S", email = "fathimaazeela55@gmail.com"},
+    {name = "Sakthimurugan S", email = "sakthimurugan050806@gmail.com"},
+    {name = "Yuvashree S", email = "yuvashree310305@gmail.com"},
+    {name = "Ganesh B", email = "ganeshbalaji765@gmail.com"}
+]
+
+dependencies = [
+    "pandas>=2.0",
+    "python-dotenv>=1.0",
+    "langchain-chroma>=0.2",
+    "langchain-huggingface>=0.1",
+    "langchain-google-genai>=2.0"
+]
+
+
+[project.optional-dependencies]
+
+postgres = [
+    "psycopg2-binary>=2.9"
+]
+
+dev = [
+    "pytest>=8.0",
+    "build>=1.2",
+    "twine>=6.0"
+]
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+
+[tool.setuptools.package-data]
+telecom_agents = [
+    "data/*"
+]
